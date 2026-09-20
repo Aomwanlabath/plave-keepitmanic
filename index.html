@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>วงล้อคำทำนาย</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@500;600;700&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-1:#150f24;
+    --bg-2:#211a38;
+    --gold:#c9a35a;
+    --gold-soft:#e4c98a;
+    --ivory:#f3ede0;
+    --muted:#a99bc4;
+    --c1:#241b3d;
+    --c2:#c9a35a;
+    --c3:#5c3a7a;
+    --c4:#2f5d62;
+    --c5:#7a3b46;
+    --c6:#3d4f7a;
+  }
+
+  *{box-sizing:border-box;}
+
+  body{
+    margin:0;
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 20% 15%, rgba(201,163,90,0.10), transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(92,58,122,0.25), transparent 45%),
+      linear-gradient(180deg, var(--bg-1), var(--bg-2));
+    color:var(--ivory);
+    font-family:'Sarabun', sans-serif;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:48px 20px 64px;
+    overflow-x:hidden;
+  }
+
+  .stars{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:0;
+    background-image:
+      radial-gradient(1.5px 1.5px at 10% 20%, rgba(255,255,255,.5), transparent),
+      radial-gradient(1.5px 1.5px at 80% 10%, rgba(255,255,255,.4), transparent),
+      radial-gradient(1px 1px at 60% 70%, rgba(255,255,255,.35), transparent),
+      radial-gradient(1.5px 1.5px at 30% 85%, rgba(255,255,255,.4), transparent),
+      radial-gradient(1px 1px at 90% 60%, rgba(255,255,255,.3), transparent),
+      radial-gradient(1.5px 1.5px at 45% 40%, rgba(255,255,255,.35), transparent);
+    background-size: 100% 100%;
+  }
+
+  header{
+    text-align:center;
+    max-width:520px;
+    margin-bottom:36px;
+    position:relative;
+    z-index:1;
+  }
+
+  .eyebrow{
+    color:var(--gold-soft);
+    font-size:14px;
+    letter-spacing:.04em;
+    margin-bottom:10px;
+    opacity:.85;
+  }
+
+  h1{
+    font-family:'Noto Serif Thai', serif;
+    font-weight:700;
+    font-size:clamp(32px, 6vw, 46px);
+    margin:0 0 14px;
+    line-height:1.25;
+  }
+
+  header p{
+    color:var(--muted);
+    font-size:16px;
+    line-height:1.7;
+    margin:0;
+  }
+
+  .wheel-zone{
+    position:relative;
+    z-index:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    margin-top:8px;
+  }
+
+  .pointer{
+    width:0;
+    height:0;
+    border-left:14px solid transparent;
+    border-right:14px solid transparent;
+    border-top:24px solid var(--gold-soft);
+    filter:drop-shadow(0 2px 4px rgba(0,0,0,.4));
+    margin-bottom:-6px;
+    z-index:3;
+  }
+
+  .wheel-outer{
+    position:relative;
+    width:min(78vw, 380px);
+    height:min(78vw, 380px);
+    border-radius:50%;
+    padding:10px;
+    background:linear-gradient(135deg, var(--gold-soft), #7a6636 60%, var(--gold));
+    box-shadow:
+      0 0 0 1px rgba(201,163,90,.3),
+      0 30px 60px -20px rgba(0,0,0,.7),
+      0 0 60px rgba(201,163,90,.08);
+  }
+
+  .wheel{
+    position:relative;
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    background:conic-gradient(
+      var(--c1) 0deg 30deg,   var(--c2) 30deg 60deg,
+      var(--c3) 60deg 90deg,  var(--c4) 90deg 120deg,
+      var(--c5) 120deg 150deg, var(--c6) 150deg 180deg,
+      var(--c1) 180deg 210deg, var(--c2) 210deg 240deg,
+      var(--c3) 240deg 270deg, var(--c4) 270deg 300deg,
+      var(--c5) 300deg 330deg, var(--c6) 330deg 360deg
+    );
+    box-shadow: inset 0 0 30px rgba(0,0,0,.5), inset 0 0 0 2px rgba(243,237,224,.06);
+    transition: transform 4.2s cubic-bezier(.16,.85,.2,1);
+    will-change: transform;
+  }
+
+  .wheel .divider{
+    position:absolute;
+    top:0; left:50%;
+    width:1px; height:50%;
+    background:rgba(243,237,224,.14);
+    transform-origin: bottom center;
+  }
+
+  .wheel .mark{
+    position:absolute;
+    top:50%; left:50%;
+    width:0; height:0;
+    transform-origin:0 0;
+  }
+  .wheel .mark span{
+    position:absolute;
+    left:-9px; top:-9px;
+    display:block;
+    color:rgba(243,237,224,.75);
+    font-size:14px;
+    text-shadow:0 1px 2px rgba(0,0,0,.5);
+  }
+
+  .hub{
+    position:absolute;
+    top:50%; left:50%;
+    width:64px; height:64px;
+    transform:translate(-50%,-50%);
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #2d2246, #150f24 75%);
+    border:2px solid var(--gold-soft);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:24px;
+    box-shadow:0 4px 14px rgba(0,0,0,.5);
+    z-index:2;
+  }
+
+  .spin-btn{
+    margin-top:34px;
+    background:linear-gradient(135deg, var(--gold-soft), var(--gold));
+    color:#20162f;
+    border:none;
+    font-family:'Noto Serif Thai', serif;
+    font-weight:600;
+    font-size:18px;
+    padding:14px 38px;
+    border-radius:999px;
+    cursor:pointer;
+    box-shadow:0 10px 24px -8px rgba(201,163,90,.5);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .spin-btn:hover{ transform:translateY(-2px); box-shadow:0 14px 28px -8px rgba(201,163,90,.6); }
+  .spin-btn:active{ transform:translateY(0); }
+  .spin-btn:disabled{ opacity:.55; cursor:not-allowed; transform:none; }
+  .spin-btn:focus-visible{ outline:2px solid var(--gold-soft); outline-offset:3px; }
+
+  .result{
+    position:relative;
+    z-index:1;
+    max-width:480px;
+    width:100%;
+    margin-top:40px;
+    padding:30px 28px;
+    border-radius:20px;
+    background:rgba(243,237,224,.05);
+    border:1px solid rgba(201,163,90,.3);
+    text-align:center;
+    opacity:0;
+    transform:translateY(14px) scale(.98);
+    transition:opacity .5s ease, transform .5s ease;
+    pointer-events:none;
+  }
+  .result.show{
+    opacity:1;
+    transform:translateY(0) scale(1);
+    pointer-events:auto;
+  }
+  .result .label{
+    color:var(--gold-soft);
+    font-size:13px;
+    letter-spacing:.05em;
+    margin-bottom:12px;
+  }
+  .result p{
+    font-family:'Noto Serif Thai', serif;
+    font-size:clamp(19px, 3.4vw, 23px);
+    line-height:1.7;
+    margin:0;
+  }
+
+  footer{
+    margin-top:56px;
+    color:var(--muted);
+    font-size:13px;
+    text-align:center;
+    z-index:1;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .wheel{ transition-duration:.6s; }
+    .result{ transition-duration:0s; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stars"></div>
+
+<header>
+  <div class="eyebrow">ดวงชะตาวันนี้</div>
+  <h1>วงล้อคำทำนาย</h1>
+  <p>หมุนวงล้อหนึ่งครั้ง แล้วปล่อยให้จักรวาลเลือกข้อความที่ใช่สำหรับคุณในตอนนี้</p>
+</header>
+
+<div class="wheel-zone">
+  <div class="pointer"></div>
+  <div class="wheel-outer">
+    <div class="wheel" id="wheel">
+      <div class="hub">🌙</div>
+    </div>
+  </div>
+  <button class="spin-btn" id="spinBtn">หมุนวงล้อ</button>
+</div>
+
+<div class="result" id="result">
+  <div class="label">คำทำนายของคุณ</div>
+  <p id="resultText">—</p>
+</div>
+
+<footer>ทำเพื่อความบันเทิงเท่านั้น 🌟</footer>
+
+<script>
+  const fortunes = [
+    "ความรักที่รอคอยกำลังจะเดินทางมาถึง เปิดใจให้กว้างไว้",
+    "คนที่เข้าใจคุณอย่างแท้จริงอยู่ใกล้กว่าที่คิด",
+    "ความสัมพันธ์เก่าจะกลับมาสดใสอีกครั้งด้วยความจริงใจ",
+    "อย่ากลัวที่จะบอกความในใจ วันนี้คือจังหวะที่เหมาะสม",
+    "ความรักในครอบครัวจะเป็นพลังใจให้คุณก้าวต่อ",
+    "คนโสดจะได้พบเจอใครสักคนในที่ที่ไม่คาดคิด",
+    "ให้เวลากับคนที่คุณรักมากขึ้น ความสุขเล็กๆ อยู่ตรงนั้น",
+    "ความเข้าใจผิดที่ผ่านมาจะคลี่คลายด้วยการพูดคุยอย่างจริงใจ",
+    "มิตรภาพดีๆ กำลังจะเบ่งบานเป็นความสัมพันธ์ที่ลึกซึ้ง",
+    "รักแท้ไม่จำเป็นต้องสมบูรณ์แบบ แค่ต้องจริงใจต่อกัน",
+    "การให้อภัยจะทำให้หัวใจของคุณเบาขึ้นมาก",
+    "ความรักที่มั่นคงเริ่มต้นจากการรักตัวเองให้เป็นก่อน",
+    "โอกาสใหม่ในหน้าที่การงานกำลังเปิดกว้างสำหรับคุณ",
+    "ความพยายามที่ทุ่มเทไปจะเริ่มเห็นผลในไม่ช้า",
+    "งานที่ทำอยู่ตอนนี้กำลังวางรากฐานให้กับอนาคตที่มั่นคง",
+    "อย่าลังเลที่จะเสนอไอเดียใหม่ๆ ในที่ทำงาน",
+    "การเปลี่ยนแปลงในหน้าที่การงานจะนำมาซึ่งสิ่งที่ดีกว่า",
+    "ความร่วมมือกับผู้อื่นจะพาโปรเจกต์ของคุณไปได้ไกล",
+    "ทักษะที่คุณฝึกฝนมานานกำลังจะได้ใช้อย่างเต็มที่",
+    "หัวหน้าหรือคนรอบข้างเริ่มมองเห็นความตั้งใจของคุณ",
+    "อย่ากลัวความล้มเหลว มันคือบทเรียนที่พาคุณไปสู่ความสำเร็จ",
+    "การเรียนรู้สิ่งใหม่จะเปิดประตูโอกาสที่คุณไม่เคยคาดคิด",
+    "ความอดทนในงานที่ทำอยู่จะได้รับการตอบแทนอย่างคุ้มค่า",
+    "จังหวะเวลาที่เหมาะสมสำหรับการตัดสินใจครั้งสำคัญกำลังมาถึง",
+    "เครือข่ายคนรู้จักของคุณจะนำโอกาสดีๆ เข้ามา",
+    "การเงินของคุณกำลังจะดีขึ้นหากรู้จักวางแผนอย่างรอบคอบ",
+    "โชคลาภเล็กๆ น้อยๆ อาจแวะเวียนมาหาในเร็ววันนี้",
+    "การลงทุนที่ทำด้วยความรอบคอบจะให้ผลตอบแทนที่ดี",
+    "อย่าใช้จ่ายเกินตัว เก็บออมไว้สำหรับวันข้างหน้า",
+    "รายได้เสริมจากความสามารถพิเศษของคุณกำลังจะเกิดขึ้น",
+    "หนี้สินที่ค้างคาใจจะเริ่มคลี่คลายไปในทางที่ดี",
+    "ความมั่งคั่งที่แท้จริงเริ่มจากการรู้จักพอ",
+    "โอกาสทางการเงินจะมาพร้อมกับคนที่คุณไว้ใจ",
+    "การวางแผนการเงินระยะยาววันนี้จะให้ผลคุ้มค่าในอนาคต",
+    "ของขวัญหรือโบนัสที่ไม่คาดฝันอาจกำลังรอคุณอยู่",
+    "ความรอบคอบในการใช้เงินจะช่วยให้คุณผ่านช่วงเวลานี้ไปได้ดี",
+    "งานพิเศษที่เข้ามาจะช่วยเสริมรายได้ให้มั่นคงขึ้น",
+    "การพักผ่อนให้เพียงพอคือของขวัญที่ร่างกายต้องการที่สุดตอนนี้",
+    "ลองออกกำลังกายเบาๆ จะช่วยให้ทั้งกายและใจแจ่มใสขึ้น",
+    "อย่ามองข้ามสัญญาณเล็กๆ ที่ร่างกายพยายามบอกคุณ",
+    "ความสงบภายในใจจะช่วยเยียวยาความเหนื่อยล้าที่สะสมมา",
+    "การกินอาหารที่มีประโยชน์วันนี้จะส่งผลดีในระยะยาว",
+    "เวลาสำหรับตัวเองสำคัญไม่แพ้เวลาทำงาน อย่าลืมดูแลตัวเอง",
+    "พลังงานที่ดีกำลังกลับมา ให้เวลาตัวเองได้ฟื้นฟูอย่างเต็มที่",
+    "การหายใจลึกๆ สักสองสามครั้งจะช่วยคลายความกังวลได้มาก",
+    "สุขภาพใจที่ดีเริ่มจากการให้อภัยตัวเองในเรื่องเล็กๆ",
+    "ธรรมชาติรอบตัวคือยาที่ดีที่สุดในวันที่รู้สึกเหนื่อยล้า",
+    "การนอนหลับที่มีคุณภาพคือกุญแจสำคัญของวันพรุ่งนี้",
+    "อย่าลืมยิ้มให้ตัวเองบ้าง มันมีพลังมากกว่าที่คิด",
+    "วันนี้เป็นวันที่เหมาะกับการเริ่มต้นสิ่งใหม่",
+    "โชคชะตากำลังเปิดทางให้คุณก้าวไปข้างหน้าอย่างมั่นใจ",
+    "สิ่งที่มองว่าเป็นอุปสรรควันนี้ อาจเป็นโอกาสในวันหน้า",
+    "ดวงดาวกำลังส่องแสงนำทางให้กับการตัดสินใจของคุณ",
+    "ความตั้งใจที่มั่นคงจะพาคุณไปถึงจุดหมายได้เสมอ",
+    "บางครั้งการปล่อยวางคือคำตอบที่ดีที่สุด",
+    "สิ่งดีๆ มักมาถึงเมื่อคุณเลิกกังวลมากเกินไป",
+    "เชื่อในสัญชาตญาณของตัวเอง มันกำลังนำทางคุณอย่างถูกต้อง",
+    "การเดินทางไกลจะนำพาประสบการณ์ดีๆ เข้ามาในชีวิต",
+    "คำพูดให้กำลังใจจากคนใกล้ตัวจะช่วยจุดประกายให้คุณ",
+    "ทุกความพยายามในวันนี้กำลังสร้างเส้นทางสู่ความสำเร็จ",
+    "ความคิดสร้างสรรค์ของคุณกำลังจะเบ่งบานอย่างเต็มที่",
+    "จงเชื่อว่าสิ่งที่ดีที่สุดยังรอคุณอยู่ข้างหน้า",
+    "โอกาสที่รอคอยมานานกำลังจะปรากฏตัวในไม่ช้า",
+    "การเปลี่ยนแปลงเล็กๆ ในชีวิตประจำวันจะนำมาซึ่งความสุขที่ยิ่งใหญ่",
+    "คนแปลกหน้าที่คุณพบอาจนำเรื่องราวดีๆ เข้ามาในชีวิต",
+    "ความกล้าหาญที่จะเริ่มต้นใหม่คือของขวัญที่คุณมอบให้ตัวเองได้",
+    "สิ่งที่คุณหว่านไว้ด้วยความตั้งใจดี จะเก็บเกี่ยวผลที่งดงาม",
+    "วันพรุ่งนี้จะสดใสกว่าวันนี้ ขอเพียงอย่าหยุดก้าวเดิน",
+    "ความสุขที่แท้จริงซ่อนอยู่ในเรื่องเล็กๆ รอบตัวคุณ",
+    "พลังบวกที่คุณส่งออกไปจะย้อนกลับมาหาคุณเสมอ",
+    "อย่ากลัวที่จะขอความช่วยเหลือเมื่อรู้สึกเหนื่อยล้า",
+    "การเริ่มต้นใหม่ไม่มีคำว่าสายเกินไป",
+    "ทุกอุปสรรคที่ผ่านเข้ามาล้วนสอนบทเรียนอันมีค่าให้คุณ",
+    "จงภูมิใจในระยะทางที่คุณเดินผ่านมา แม้จะเล็กน้อยแค่ไหน",
+    "จักรวาลกำลังจัดเตรียมสิ่งดีๆ ไว้ให้คุณอย่างไม่คาดคิด"
+  ];
+
+  const wheel = document.getElementById('wheel');
+  const spinBtn = document.getElementById('spinBtn');
+  const result = document.getElementById('result');
+  const resultText = document.getElementById('resultText');
+
+  // decorative dividers + star marks around the wheel
+  const marksIcons = ['✦','✧','✦','✧','✦','✧','✦','✧','✦','✧','✦','✧'];
+  for (let i = 0; i < 12; i++) {
+    const div = document.createElement('div');
+    div.className = 'divider';
+    div.style.transform = `rotate(${i * 30}deg)`;
+    wheel.appendChild(div);
+
+    const mark = document.createElement('div');
+    mark.className = 'mark';
+    mark.style.transform = `rotate(${i * 30 + 15}deg) translate(0, -125px)`;
+    const span = document.createElement('span');
+    span.textContent = marksIcons[i];
+    mark.appendChild(span);
+    wheel.appendChild(mark);
+  }
+
+  let currentRotation = 0;
+  let spinning = false;
+  let lastIndex = -1;
+
+  function pickFortuneIndex() {
+    let idx;
+    do {
+      idx = Math.floor(Math.random() * fortunes.length);
+    } while (idx === lastIndex && fortunes.length > 1);
+    lastIndex = idx;
+    return idx;
+  }
+
+  function spin() {
+    if (spinning) return;
+    spinning = true;
+    spinBtn.disabled = true;
+    result.classList.remove('show');
+
+    const extraTurns = 5 + Math.floor(Math.random() * 3); // 5-7 full turns
+    const randomOffset = Math.floor(Math.random() * 360);
+    currentRotation += extraTurns * 360 + randomOffset;
+    wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+    const idx = pickFortuneIndex();
+
+    const onEnd = () => {
+      wheel.removeEventListener('transitionend', onEnd);
+      resultText.textContent = fortunes[idx];
+      result.classList.add('show');
+      spinning = false;
+      spinBtn.disabled = false;
+      spinBtn.textContent = 'ดูดวงอีกครั้ง';
+    };
+    wheel.addEventListener('transitionend', onEnd);
+  }
+
+  spinBtn.addEventListener('click', spin);
+</script>
+
+</body>
+</html>

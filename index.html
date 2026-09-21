@@ -9,20 +9,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@500;600;700&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg-1: #0a0c14;
-    --bg-2: #161026;
-    --neon-blue: #00f0ff;
-    --neon-purple: #b620e0;
+    --bg-1: #0a0a0c;
+    --bg-2: #1c0000;
+    --primary-red: #d31118;
+    --dark-red: #520000;
     --ivory: #f5f7fa;
     --muted: #8b92a5;
-    
-    /* PLAVE Member Colors */
-    --yejun: #0078FF;
-    --noah: #8a2be2;
-    --bamby: #ff69b4;
-    --eunho: #ff3333;
-    --hamin: #1dd1a1;
-    --asterum: #e2e8f0;
   }
 
   *{box-sizing:border-box;}
@@ -38,6 +30,42 @@
     align-items:center;
     padding:48px 20px 64px;
     overflow-x:hidden;
+  }
+
+  /* หน้าจอ Intro */
+  #intro-screen {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    transition: opacity 1s ease, visibility 1s ease;
+  }
+  #intro-screen.fade-out {
+    opacity: 0;
+    visibility: hidden;
+  }
+  #intro-screen h1 {
+    font-size: clamp(24px, 6vw, 42px);
+    color: var(--ivory);
+    text-shadow: 0 0 15px rgba(211, 17, 24, 0.5);
+    text-align: center;
+  }
+
+  /* คอนเทนต์หลักซ่อนไว้ก่อนแล้วค่อยเฟดขึ้นมา */
+  #main-ui {
+    opacity: 0;
+    transition: opacity 1s ease 0.5s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    z-index: 1;
+  }
+  #main-ui.show {
+    opacity: 1;
   }
 
   .bg-video-wrap{
@@ -64,11 +92,9 @@
     position:fixed;
     inset:0;
     z-index:0;
-    background:
-      radial-gradient(circle at 20% 15%, rgba(0, 240, 255, 0.15), transparent 40%),
-      radial-gradient(circle at 85% 80%, rgba(182, 32, 224, 0.15), transparent 45%),
-      linear-gradient(180deg, var(--bg-1), var(--bg-2));
-    opacity:.7;
+    /* เปลี่ยนกราเดี้ยน Overlay เป็น แดง-ดำ ตามรีเควส */
+    background: linear-gradient(135deg, rgba(211, 17, 24, 0.4) 0%, rgba(10, 10, 12, 0.9) 100%);
+    opacity:.8;
     pointer-events:none;
   }
 
@@ -92,16 +118,14 @@
     max-width:520px;
     margin-bottom:36px;
     position:relative;
-    z-index:1;
   }
 
   .eyebrow{
-    color:var(--neon-blue);
+    color:var(--primary-red);
     font-size:14px;
     font-weight:600;
     letter-spacing:.06em;
     margin-bottom:10px;
-    text-shadow: 0 0 8px rgba(0,240,255,0.4);
   }
 
   h1{
@@ -121,7 +145,6 @@
 
   .wheel-zone{
     position:relative;
-    z-index:1;
     display:flex;
     flex-direction:column;
     align-items:center;
@@ -133,8 +156,8 @@
     height:0;
     border-left:14px solid transparent;
     border-right:14px solid transparent;
-    border-top:24px solid var(--neon-blue);
-    filter:drop-shadow(0 0 10px var(--neon-blue));
+    border-top:24px solid var(--primary-red);
+    filter:drop-shadow(0 0 8px var(--primary-red));
     margin-bottom:-6px;
     z-index:3;
   }
@@ -145,11 +168,12 @@
     height:min(78vw, 380px);
     border-radius:50%;
     padding:10px;
-    background:linear-gradient(135deg, var(--neon-blue), #2b1055 60%, var(--neon-purple));
+    /* เปลี่ยนขอบวงล้อเป็นกราเดี้ยน แดง-ดำ */
+    background:linear-gradient(135deg, var(--primary-red), #000000 70%, var(--dark-red));
     box-shadow:
-      0 0 0 2px rgba(0,240,255,.3),
-      0 30px 60px -20px rgba(0,0,0,.8),
-      0 0 60px rgba(182,32,224,.15);
+      0 0 0 2px rgba(211,17,24,.3),
+      0 30px 60px -20px rgba(0,0,0,.9),
+      0 0 40px rgba(211,17,24,.2);
   }
 
   .wheel{
@@ -157,15 +181,16 @@
     width:100%;
     height:100%;
     border-radius:50%;
+    /* เปลี่ยนสีในวงล้อเป็น ขาว-เทา */
     background:conic-gradient(
-      var(--yejun) 0deg 30deg,   var(--noah) 30deg 60deg,
-      var(--bamby) 60deg 90deg,  var(--eunho) 90deg 120deg,
-      var(--hamin) 120deg 150deg, var(--asterum) 150deg 180deg,
-      var(--yejun) 180deg 210deg, var(--noah) 210deg 240deg,
-      var(--bamby) 240deg 270deg, var(--eunho) 270deg 300deg,
-      var(--hamin) 300deg 330deg, var(--asterum) 330deg 360deg
+      #ffffff 0deg 30deg,   #d9d9d9 30deg 60deg,
+      #ffffff 60deg 90deg,  #d9d9d9 90deg 120deg,
+      #ffffff 120deg 150deg, #d9d9d9 150deg 180deg,
+      #ffffff 180deg 210deg, #d9d9d9 210deg 240deg,
+      #ffffff 240deg 270deg, #d9d9d9 270deg 300deg,
+      #ffffff 300deg 330deg, #d9d9d9 330deg 360deg
     );
-    box-shadow: inset 0 0 30px rgba(0,0,0,.7), inset 0 0 0 2px rgba(255,255,255,.1);
+    box-shadow: inset 0 0 30px rgba(0,0,0,.5);
     transition: transform 4.2s cubic-bezier(.16,.85,.2,1);
     will-change: transform;
   }
@@ -174,22 +199,8 @@
     position:absolute;
     top:0; left:50%;
     width:1px; height:50%;
-    background:rgba(255,255,255,.2);
+    background:rgba(0,0,0,.15);
     transform-origin: bottom center;
-  }
-
-  .wheel .mark{
-    position:absolute;
-    top:50%; left:50%;
-    width:0; height:0;
-    transform-origin:0 0;
-  }
-  .wheel .mark span{
-    position:absolute;
-    left:-12px; top:-12px;
-    display:block;
-    font-size:20px;
-    text-shadow:0 0 10px rgba(255,255,255,.6);
   }
 
   .hub{
@@ -198,19 +209,23 @@
     width:64px; height:64px;
     transform:translate(-50%,-50%);
     border-radius:50%;
-    background:radial-gradient(circle at 35% 30%, #2a2a35, #0a0a0c 75%);
-    border:2px solid var(--neon-blue);
+    background:#000;
+    border:2px solid var(--primary-red);
     display:flex;
     align-items:center;
     justify-content:center;
-    font-size:24px;
-    box-shadow:0 0 15px var(--neon-blue);
+    box-shadow:0 0 15px var(--primary-red);
     z-index:2;
+  }
+  
+  .hub img {
+    width: 65%;
+    height: auto;
   }
 
   .spin-btn{
     margin-top:34px;
-    background:linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+    background:linear-gradient(135deg, var(--primary-red), var(--dark-red));
     color:#fff;
     border:none;
     font-family:'Noto Serif Thai', serif;
@@ -219,55 +234,82 @@
     padding:14px 38px;
     border-radius:999px;
     cursor:pointer;
-    box-shadow:0 0 20px -5px var(--neon-purple);
+    box-shadow:0 0 20px -5px var(--primary-red);
     transition:transform .15s ease, box-shadow .15s ease;
   }
-  .spin-btn:hover{ transform:translateY(-2px); box-shadow:0 0 25px 0px var(--neon-blue); }
+  .spin-btn:hover{ transform:translateY(-2px); box-shadow:0 0 25px 0px var(--primary-red); }
   .spin-btn:active{ transform:translateY(0); }
   .spin-btn:disabled{ opacity:.55; cursor:not-allowed; transform:none; }
-  .spin-btn:focus-visible{ outline:2px solid var(--neon-blue); outline-offset:3px; }
+
+  /* ปรับแก้ Result ให้เป็น Pop-up Modal */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
+    z-index: 49;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+  .modal-backdrop.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
 
   .result{
-    position:relative;
-    z-index:1;
-    max-width:480px;
-    width:100%;
-    margin-top:40px;
-    padding:24px 20px;
+    position:fixed;
+    top:50%; left:50%;
+    z-index:50;
+    width: 90%;
+    max-width: 420px;
+    padding:30px 24px;
     border-radius:20px;
-    background:rgba(255,255,255,.08);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border:1px solid rgba(0,240,255,.3);
+    background: linear-gradient(180deg, #1a0505 0%, #0a0a0c 100%);
+    border:1px solid var(--primary-red);
+    box-shadow: 0 10px 40px rgba(211,17,24,0.3);
     text-align:center;
     opacity:0;
-    transform:translateY(14px) scale(.98);
-    transition:opacity .5s ease, transform .5s ease;
+    transform:translate(-50%, -40%) scale(.95);
+    transition:opacity .4s ease, transform .4s ease;
     pointer-events:none;
   }
   .result.show{
     opacity:1;
-    transform:translateY(0) scale(1);
+    transform:translate(-50%, -50%) scale(1);
     pointer-events:auto;
   }
   .result .label{
-    color:var(--neon-blue);
+    color:var(--primary-red);
     font-size:14px;
     font-weight:600;
     letter-spacing:.05em;
-    margin-bottom:12px;
+    margin-bottom:16px;
   }
   
-  /* ปรับแต่งส่วนเนื้อหาคำทำนายให้อ่านง่ายขึ้นสำหรับข้อความยาวๆ */
   .result p{
     font-family:'Sarabun', sans-serif;
     font-size:clamp(15px, 3.5vw, 17px);
     font-weight: 300;
     line-height:1.6;
-    margin:0;
+    margin:0 0 24px;
     color: var(--ivory);
     text-align: left;
-    padding: 0 8px;
+  }
+
+  .close-btn {
+    background: transparent;
+    color: var(--ivory);
+    border: 1px solid var(--muted);
+    padding: 8px 24px;
+    border-radius: 99px;
+    font-family: 'Sarabun', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .close-btn:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: var(--ivory);
   }
 
   footer{
@@ -275,11 +317,15 @@
     color:var(--muted);
     font-size:13px;
     text-align:center;
-    z-index:1;
   }
 </style>
 </head>
 <body>
+
+<!-- หน้าจอ Intro -->
+<div id="intro-screen">
+  <h1>PLAVE KEEP IT MANIC TOUR 2026</h1>
+</div>
 
 <div class="bg-video-wrap">
   <iframe class="bg-video"
@@ -290,28 +336,37 @@
 <div class="tint-overlay"></div>
 <div class="stars"></div>
 
-<header>
-  <div class="eyebrow">PLAVE KEEP IT MANIC TOUR 2026</div>
-  <h1>Unlock your destiny in Asterum</h1>
-  <p>สแกนความถี่จาก Asterum เพื่อรับข้อความที่จักรวาลอยากบอกคุณในวันนี้</p>
-</header>
+<!-- แบ็คดรอปสำหรับ Pop-up -->
+<div class="modal-backdrop" id="modalBackdrop"></div>
 
-<div class="wheel-zone">
-  <div class="pointer"></div>
-  <div class="wheel-outer">
-    <div class="wheel" id="wheel">
-      <div class="hub">👽</div>
+<div id="main-ui">
+  <header>
+    <div class="eyebrow">PLAVE KEEP IT MANIC TOUR 2026</div>
+    <h1>Unlock your destiny in Asterum</h1>
+    <p>สแกนความถี่จาก Asterum เพื่อรับข้อความที่จักรวาลอยากบอกคุณในวันนี้</p>
+  </header>
+
+  <div class="wheel-zone">
+    <div class="pointer"></div>
+    <div class="wheel-outer">
+      <div class="wheel" id="wheel">
+        <div class="hub">
+          <img src="https://vlast.com/wp-content/uploads/2023/12/plave_logo_wh.svg" alt="PLAVE Logo">
+        </div>
+      </div>
     </div>
+    <button class="spin-btn" id="spinBtn">เชื่อมต่อคลื่นความถี่ (Spin)</button>
   </div>
-  <button class="spin-btn" id="spinBtn">เชื่อมต่อคลื่นความถี่ (Spin)</button>
+
+  <footer>PLLI GIVEAWAY 🌟</footer>
 </div>
 
+<!-- Modal Pop-up -->
 <div class="result" id="result">
-  <div class="label" id="resultLabel">ข้อความจาก Asterum</div>
+  <div class="label">ข้อความจากจักรวาล</div>
   <p id="resultText">—</p>
+  <button class="close-btn" id="closeBtn">ปิด</button>
 </div>
-
-<footer>PLLI GIVEAWAY 🌟</footer>
 
 <script>
   // ชุดข้อมูลข้อความทำนายดั้งเดิมของคุณ
@@ -372,36 +427,28 @@
     "ไม่ว่าตอนนี้คุณจะถูกทดสอบหรือถูกกดดันมากแค่ไหน จงยืนหยัดและสู้กลับไป เชื่อในตัวของคุณเองและคุณค่าของตัวเองให้มากพอที่จะไม่ไม่ปล่อยให้ใครมาทำให้คุณไขว้เขวได้ มีความมั่นใจที่จะก้าวไปข้างหน้า คุณทำได้และจะทำได้สำเร็จ"
   ];
 
-  const labels = [
-    "💙 คลื่นความถี่จากเยจุน:",
-    "💜 คลื่นความถี่จากโนอา:",
-    "🩷 คลื่นความถี่จากแบมบี้:",
-    "❤️ คลื่นความถี่จากอึนโฮ:",
-    "🖤💚 คลื่นความถี่จากฮามิน:",
-    "🌌 ข้อความจาก Asterum:"
-  ];
-
   const wheel = document.getElementById('wheel');
   const spinBtn = document.getElementById('spinBtn');
   const result = document.getElementById('result');
-  const resultLabel = document.getElementById('resultLabel');
   const resultText = document.getElementById('resultText');
+  const modalBackdrop = document.getElementById('modalBackdrop');
+  const closeBtn = document.getElementById('closeBtn');
 
-  const marksIcons = ['🐬','🦙','🦌','🐺','🐈‍⬛','🌌', '🐬','🦙','🦌','🐺','🐈‍⬛','🌌'];
+  // วาดเส้นแบ่งช่องวงล้อ (ไม่มีไอคอน)
   for (let i = 0; i < 12; i++) {
     const div = document.createElement('div');
     div.className = 'divider';
     div.style.transform = `rotate(${i * 30}deg)`;
     wheel.appendChild(div);
-
-    const mark = document.createElement('div');
-    mark.className = 'mark';
-    mark.style.transform = `rotate(${i * 30 + 15}deg) translate(0, -125px)`;
-    const span = document.createElement('span');
-    span.textContent = marksIcons[i];
-    mark.appendChild(span);
-    wheel.appendChild(mark);
   }
+
+  // อนิเมชัน Intro หน้าแรก
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('intro-screen').classList.add('fade-out');
+      document.getElementById('main-ui').classList.add('show');
+    }, 2200); // ดีเลย์ 2.2 วินาทีก่อนเฟดออก
+  });
 
   let currentRotation = 0;
   let spinning = false;
@@ -410,16 +457,12 @@
     if (spinning) return;
     spinning = true;
     spinBtn.disabled = true;
-    result.classList.remove('show');
 
-    // สุ่มผลลัพธ์จากข้อความทำนาย 54 ข้อ
+    // สุ่มผลลัพธ์
     const textIdx = Math.floor(Math.random() * fortunes.length);
     
-    // สุ่มช่องบนหน้าปัดวงล้อ (0 ถึง 11) เพื่อให้ลอจิกหน้าปัดและข้อความทำงานแยกกันอย่างอิสระ
+    // สุ่มช่องบนหน้าปัดวงล้อ (0 ถึง 11) เพื่อให้หมุนสุ่ม
     const targetSegment = Math.floor(Math.random() * 12);
-    
-    // หาสี/คน ที่หน้าปัดไปตก (0-5)
-    const labelIdx = targetSegment % 6;
     
     // คำนวณองศาหมุน
     const landAngle = 360 - (targetSegment * 30 + 15);
@@ -433,17 +476,24 @@
 
     const onEnd = () => {
       wheel.removeEventListener('transitionend', onEnd);
-      resultLabel.textContent = labels[labelIdx];
       resultText.textContent = fortunes[textIdx];
+      // แสดง Modal Pop-up
+      modalBackdrop.classList.add('show');
       result.classList.add('show');
       spinning = false;
       spinBtn.disabled = false;
-      spinBtn.textContent = 'เชื่อมต่ออีกครั้ง';
     };
     wheel.addEventListener('transitionend', onEnd);
   }
 
+  function closeModal() {
+    modalBackdrop.classList.remove('show');
+    result.classList.remove('show');
+  }
+
   spinBtn.addEventListener('click', spin);
+  closeBtn.addEventListener('click', closeModal);
+  modalBackdrop.addEventListener('click', closeModal);
 </script>
 
 </body>

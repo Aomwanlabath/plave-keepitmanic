@@ -32,7 +32,7 @@
     overflow-x:hidden;
   }
 
-  /* หน้าจอ Intro */
+  /* หน้าจอ Intro แบบใส่รูปภาพ */
   #intro-screen {
     position: fixed;
     inset: 0;
@@ -47,16 +47,19 @@
     opacity: 0;
     visibility: hidden;
   }
-  #intro-screen h1 {
-    font-family:'Noto Serif Thai', serif;
-    font-size: clamp(24px, 6vw, 42px);
-    color: var(--ivory);
-    text-shadow: 0 0 20px rgba(211, 17, 24, 0.8);
-    text-align: center;
-    letter-spacing: 0.05em;
+  #intro-screen img {
+    max-width: 80%;
+    max-height: 80vh;
+    object-fit: contain;
+    filter: drop-shadow(0 0 20px rgba(211, 17, 24, 0.4));
+    animation: slow-pulse 2.5s ease-in-out infinite alternate;
   }
 
-  /* คอนเทนต์หลักซ่อนไว้ก่อนแล้วค่อยเฟดขึ้นมา */
+  @keyframes slow-pulse {
+    0% { transform: scale(0.98); opacity: 0.8; }
+    100% { transform: scale(1.02); opacity: 1; }
+  }
+
   #main-ui {
     opacity: 0;
     transition: opacity 1s ease 0.5s;
@@ -87,18 +90,20 @@
     height:56.25vw;
     min-width:100%;
     min-height:100%;
-    transform:translate(-50%,-50%);
+    /* ขยายสเกลเป็น 1.15 เพื่อดัน UI และโลโก้ของ YouTube ออกนอกจอ */
+    transform:translate(-50%,-50%) scale(1.15);
     border:none;
-    opacity: 0.8;
+    opacity: 0.85;
+    pointer-events:none;
   }
 
-  /* แก้ไขพื้นหลังฝ้าเทาด้วย Dark Vignette และ Multiply */
+  /* ปรับ Overlay ให้สว่างขึ้นเล็กน้อยตามคำขอ */
   .tint-overlay{
     position:fixed;
     inset:0;
     z-index:0;
-    background: radial-gradient(circle at center, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.95) 100%);
-    background-color: rgba(10, 0, 0, 0.5); /* ดรอปแสงวิดีโอด้วยโทนดำอมแดงเข้มจัด */
+    background: radial-gradient(circle at center, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.85) 100%);
+    background-color: rgba(10, 0, 0, 0.3);
     mix-blend-mode: multiply;
     pointer-events:none;
   }
@@ -114,7 +119,7 @@
       radial-gradient(1.5px 1.5px at 60% 70%, rgba(211,17,24,.4), transparent),
       radial-gradient(1px 1px at 30% 85%, rgba(255,255,255,.2), transparent);
     background-size: 100% 100%;
-    opacity: 0.6;
+    opacity: 0.75;
   }
 
   header{
@@ -147,7 +152,6 @@
     margin:0;
   }
 
-  /* ดีไซน์ใหม่: Asterum Sync Node */
   .sync-zone {
     position: relative;
     display: flex;
@@ -220,7 +224,6 @@
     transition: transform 0.3s ease;
   }
 
-  /* Interaction & Animation states */
   .sync-node:hover .node-core {
     transform: scale(1.05);
     box-shadow: 0 0 40px var(--neon-red);
@@ -237,7 +240,6 @@
     transform: scale(0.95);
   }
 
-  /* สถานะกำลังประมวลผล (เมื่อกด) */
   .sync-node.is-syncing .ring-1 { animation: spin-fast 0.8s linear infinite; border-color: var(--ivory); }
   .sync-node.is-syncing .ring-2 { animation: spin-fast 0.5s linear infinite reverse; border-color: var(--ivory); }
   .sync-node.is-syncing .node-core {
@@ -253,7 +255,6 @@
     opacity: 0;
   }
 
-  /* ข้อความบอกใบ้ UX */
   .tap-hint {
     margin-top: 32px;
     font-size: 13px;
@@ -273,7 +274,6 @@
     50% { opacity: 1; text-shadow: 0 0 10px var(--primary-red); }
   }
 
-  /* Modal Pop-up */
   .modal-backdrop {
     position: fixed;
     inset: 0;
@@ -359,9 +359,9 @@
 </head>
 <body>
 
-<!-- หน้าจอ Intro -->
 <div id="intro-screen">
-  <h1>PLAVE KEEP IT MANIC TOUR 2026</h1>
+  <!-- เปลี่ยนลิงก์ Google Drive เป็น Direct Link สำหรับแท็กรูปภาพ -->
+  <img src="https://drive.google.com/uc?export=view&id=1-7lBnRfJS9ROrL0H2NI98wPtz27FKkYg" alt="Intro Image">
 </div>
 
 <div class="bg-video-wrap">
@@ -373,7 +373,6 @@
 <div class="tint-overlay"></div>
 <div class="stars"></div>
 
-<!-- แบ็คดรอปสำหรับ Pop-up -->
 <div class="modal-backdrop" id="modalBackdrop"></div>
 
 <div id="main-ui">
@@ -384,7 +383,6 @@
   </header>
 
   <div class="sync-zone">
-    <!-- UI แบบใหม่ แกนเชื่อมต่อความถี่ -->
     <div class="sync-node" id="syncNode">
       <div class="orbital-ring ring-1"></div>
       <div class="orbital-ring ring-2"></div>
@@ -399,7 +397,6 @@
   <footer>PLLI GIVEAWAY 🌟</footer>
 </div>
 
-<!-- Modal Pop-up -->
 <div class="result" id="result">
   <div class="label">ข้อความจากจักรวาล</div>
   <p id="resultText">—</p>
@@ -407,7 +404,6 @@
 </div>
 
 <script>
-  // ชุดข้อมูลข้อความทำนาย
   const fortunes = [
     "อย่ายอมให้ใครมองข้ามคุณเด็ดขาด ถ้ารู้สึกว่าถูกปฏิบัติไม่ดี ก็ถอยออกจากสถานการณ์นั้นดีกว่า คุณมีคุณค่ากว่านั้นมาก",
     "เราสังเกตเห็นว่าคุณใกล้จะประสบความสำเร็จในสิ่งที่คุณรอคอยมานาน สถานการณ์กำลังจะถึงจุดที่สมบูรณ์แบบแล้ว และคุณก็ได้เรียนรู้บทเรียนที่สำคัญแล้ว นี่คือช่วงเวลาที่คุณจะได้ประโยชน์ เชื่อเถอะว่าเรากำลังทำงานเบื้องหลังเพื่อให้ผลลัพธ์ที่ดีที่สุดสำหรับคุณ",
@@ -471,12 +467,11 @@
   const modalBackdrop = document.getElementById('modalBackdrop');
   const closeBtn = document.getElementById('closeBtn');
 
-  // อนิเมชัน Intro หน้าแรก
   window.addEventListener('load', () => {
     setTimeout(() => {
       document.getElementById('intro-screen').classList.add('fade-out');
       document.getElementById('main-ui').classList.add('show');
-    }, 2200);
+    }, 2800); // ดีเลย์เพิ่มขึ้นเล็กน้อยเพื่อให้ภาพ Intro แสดงผลได้นานขึ้น
   });
 
   let isSyncing = false;
@@ -485,18 +480,14 @@
     if (isSyncing) return;
     isSyncing = true;
     
-    // ใส่คลาสเปลี่ยนสถานะแกนกลางให้หมุนเร็วและสว่างขึ้น
     syncNode.classList.add('is-syncing');
 
-    // สุ่มผลลัพธ์
     const textIdx = Math.floor(Math.random() * fortunes.length);
     
-    // หน่วงเวลาจำลองการแสกนหาคลื่นความถี่ (2 วินาที)
     setTimeout(() => {
       syncNode.classList.remove('is-syncing');
       resultText.textContent = fortunes[textIdx];
       
-      // แสดง Modal Pop-up
       modalBackdrop.classList.add('show');
       result.classList.add('show');
       isSyncing = false;

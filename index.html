@@ -64,7 +64,7 @@
     position:fixed;
     inset:0;
     overflow:hidden;
-    z-index:-1;
+    z-index:0;
     opacity:.35;
     pointer-events:none; /* คลิกทะลุไปโดนปุ่มหมุนได้ปกติ */
   }
@@ -73,7 +73,7 @@
   .tint-overlay{
     position:fixed;
     inset:0;
-    z-index:-1;   /* อยู่หน้าวิดีโอ (ซึ่งอยู่ที่ z-index ต่ำกว่านี้ถ้าจำเป็น) แต่หลังเนื้อหา */
+    z-index:0;   /* อยู่หน้าวิดีโอ (ซึ่งอยู่ที่ z-index ต่ำกว่านี้ถ้าจำเป็น) แต่หลังเนื้อหา */
     background:
       radial-gradient(circle at 20% 15%, rgba(201,163,90,0.10), transparent 40%),
       radial-gradient(circle at 85% 80%, rgba(92,58,122,0.25), transparent 45%),
@@ -281,7 +281,8 @@
 </style>
 </head>
 <body>
-
+<div class="bg-video-wrap">...</div>   <!-- 1. วิดีโอ มาก่อนสุด -->
+<div class="tint-overlay"></div>       <!-- 2. สีทับ -->
 <div class="stars"></div>
 <div class="doodle-overlay"></div>
 

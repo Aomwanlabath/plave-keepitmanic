@@ -40,6 +40,13 @@
     padding:48px 20px 64px;
     overflow-x:hidden;
   }
+  
+  <div class="bg-video-wrap">
+    <iframe class="bg-video"
+      src="https://www.youtube.com/embed/nmbZjQ_mZ7c?si=T0Lnzb-FTuWBwJKY?autoplay=1&mute=1&loop=1&playlist=VIDEO_ID&controls=0&showinfo=0&modestbranding=1&rel=0&playsinline=1"
+      allow="autoplay; encrypted-media" allowfullscreen>
+    </iframe>
+  </div>
 
   .stars{
     position:fixed;
@@ -56,17 +63,23 @@
     background-size: 100% 100%;
   }
 
-  .doodle-overlay{
+  .bg-video-wrap{
     position:fixed;
     inset:0;
-    pointer-events:none;
-    z-index:0;
-    background-image:url('https://lz7tvkjdsooytj6z.public.blob.vercel-storage.com/designs/background.webp');
-    background-repeat:no-repeat;
-    background-position:center;
-    background-size:cover;
-    opacity:50;
-    mix-blend-mode:screen;
+    overflow:hidden;
+    z-index:-1;
+    opacity:.35;
+    pointer-events:none; /* คลิกทะลุไปโดนปุ่มหมุนได้ปกติ */
+  }
+  .bg-video{
+    position:absolute;
+    top:50%; left:50%;
+    width:177.77vh;   /* คำนวณจาก 16:9 ให้ล้นจอเสมอ */
+    height:56.25vw;
+    min-width:100%;
+    min-height:100%;
+    transform:translate(-50%,-50%);
+    border:none;
   }
 
   header{

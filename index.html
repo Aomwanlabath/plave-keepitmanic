@@ -37,13 +37,38 @@
     padding:48px 20px 64px;
     overflow-x:hidden;
   }
-  
-  <div class="bg-video-wrap">
-    <iframe class="bg-video"
-      src="https://www.youtube.com/embed/nmbZjQ_mZ7c?autoplay=1&mute=1&loop=1&playlist=nmbZjQ_mZ7c&controls=0&showinfo=0&modestbranding=1&rel=0&playsinline=1"
-      allow="autoplay; encrypted-media" allowfullscreen>
-    </iframe>
-  </div>
+
+  .bg-video-wrap{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    z-index:0;
+    opacity:.35;
+    pointer-events:none; /* คลิกทะลุไปโดนปุ่มหมุนได้ปกติ */
+  }
+
+  .bg-video{
+    position:absolute;
+    top:50%; left:50%;
+    width:177.77vh;   /* คำนวณจาก 16:9 ให้ล้นจอเสมอ */
+    height:56.25vw;
+    min-width:100%;
+    min-height:100%;
+    transform:translate(-50%,-50%);
+    border:none;
+  }
+
+  .tint-overlay{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    background:
+      radial-gradient(circle at 20% 15%, rgba(201,163,90,0.10), transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(92,58,122,0.25), transparent 45%),
+      linear-gradient(180deg, var(--bg-1), var(--bg-2));
+    opacity:.55;   /* ← ปรับตัวเลขนี้ค่าเดียว คุมความเข้มของสีทับวิดีโอทั้งหมด */
+    pointer-events:none;
+  }
 
   .stars{
     position:fixed;
@@ -58,38 +83,6 @@
       radial-gradient(1px 1px at 90% 60%, rgba(255,255,255,.3), transparent),
       radial-gradient(1.5px 1.5px at 45% 40%, rgba(255,255,255,.35), transparent);
     background-size: 100% 100%;
-  }
-
-  .bg-video-wrap{
-    position:fixed;
-    inset:0;
-    overflow:hidden;
-    z-index:0;
-    opacity:.35;
-    pointer-events:none; /* คลิกทะลุไปโดนปุ่มหมุนได้ปกติ */
-  }
-  
-  <div class="tint-overlay"></div>
-  .tint-overlay{
-    position:fixed;
-    inset:0;
-    z-index:0;   /* อยู่หน้าวิดีโอ (ซึ่งอยู่ที่ z-index ต่ำกว่านี้ถ้าจำเป็น) แต่หลังเนื้อหา */
-    background:
-      radial-gradient(circle at 20% 15%, rgba(201,163,90,0.10), transparent 40%),
-      radial-gradient(circle at 85% 80%, rgba(92,58,122,0.25), transparent 45%),
-      linear-gradient(180deg, var(--bg-1), var(--bg-2));
-    opacity:.55;   /* ← ปรับตัวเลขนี้ค่าเดียว คุมความเข้มของสีทับวิดีโอทั้งหมด */
-  }
-  
-  .bg-video{
-    position:absolute;
-    top:50%; left:50%;
-    width:177.77vh;   /* คำนวณจาก 16:9 ให้ล้นจอเสมอ */
-    height:56.25vw;
-    min-width:100%;
-    min-height:100%;
-    transform:translate(-50%,-50%);
-    border:none;
   }
 
   header{
@@ -281,10 +274,15 @@
 </style>
 </head>
 <body>
-<div class="bg-video-wrap">...</div>   <!-- 1. วิดีโอ มาก่อนสุด -->
-<div class="tint-overlay"></div>       <!-- 2. สีทับ -->
+
+<div class="bg-video-wrap">
+  <iframe class="bg-video"
+    src="https://www.youtube.com/embed/nmbZjQ_mZ7c?autoplay=1&mute=1&loop=1&playlist=nmbZjQ_mZ7c&controls=0&showinfo=0&modestbranding=1&rel=0&playsinline=1"
+    allow="autoplay; encrypted-media" allowfullscreen>
+  </iframe>
+</div>
+<div class="tint-overlay"></div>
 <div class="stars"></div>
-<div class="doodle-overlay"></div>
 
 <header>
   <div class="eyebrow">ดวงชะตาวันนี้</div>
@@ -310,7 +308,7 @@
 <footer>ทำเพื่อความบันเทิงเท่านั้น 🌟</footer>
 
 <script>
-    const fortunes = [
+  const fortunes = [
     "อย่ายอมให้ใครมองข้ามคุณเด็ดขาด ถ้ารู้สึกว่าถูกปฏิบัติไม่ดี ก็ถอยออกจากสถานการณ์นั้นดีกว่า คุณมีคุณค่ากว่านั้นมาก",
     "เราสังเกตเห็นว่าคุณใกล้จะประสบความสำเร็จในสิ่งที่คุณรอคอยมานาน สถานการณ์กำลังจะถึงจุดที่สมบูรณ์แบบแล้ว และคุณก็ได้เรียนรู้บทเรียนที่สำคัญแล้ว นี่คือช่วงเวลาที่คุณจะได้ประโยชน์ เชื่อเถอะว่าเรากำลังทำงานเบื้องหลังเพื่อให้ผลลัพธ์ที่ดีที่สุดสำหรับคุณ",
     "อย่าไม่สนใจคนที่ไม่เห็นคุณค่าในตัวคุณ คุณต้องรู้ว่าตัวเองมีคุณค่า แม้ว่าคนอื่นจะมองไม่เห็นก็ตาม คุณไม่ใช่คนแบบที่คุณคิดหรอก",

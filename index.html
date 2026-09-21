@@ -32,7 +32,6 @@
     overflow-x:hidden;
   }
 
-  /* หน้าจอ Intro แบบใส่รูปภาพ */
   #intro-screen {
     position: fixed;
     inset: 0;
@@ -83,21 +82,20 @@
     pointer-events:none;
   }
 
+  /* คลาสใหม่สำหรับแท็ก video ของ HTML5 */
   .bg-video{
     position:absolute;
     top:50%; left:50%;
-    width:177.77vh;
-    height:56.25vw;
-    min-width:100%;
-    min-height:100%;
-    /* ขยายสเกลเป็น 1.15 เพื่อดัน UI และโลโก้ของ YouTube ออกนอกจอ */
-    transform:translate(-50%,-50%) scale(1.15);
-    border:none;
+    width:100%;
+    height:100%;
+    min-width: 177.77vh; 
+    min-height: 56.25vw;
+    transform:translate(-50%,-50%);
+    object-fit: cover;
     opacity: 0.85;
     pointer-events:none;
   }
 
-  /* ปรับ Overlay ให้สว่างขึ้นเล็กน้อยตามคำขอ */
   .tint-overlay{
     position:fixed;
     inset:0;
@@ -360,15 +358,15 @@
 <body>
 
 <div id="intro-screen">
-  <!-- เปลี่ยนลิงก์ Google Drive เป็น Direct Link สำหรับแท็กรูปภาพ -->
-  <img src="https://cdn.kpopping.com/tours/2026-plave-world-tour-keep-it-manic/logo.png?v=1782461565734" alt="Intro Image">
+  <img src="https://drive.google.com/uc?export=view&id=1-7lBnRfJS9ROrL0H2NI98wPtz27FKkYg" alt="Intro Image">
 </div>
 
 <div class="bg-video-wrap">
-  <iframe class="bg-video"
-    src="https://www.youtube.com/embed/nmbZjQ_mZ7c?autoplay=1&mute=1&loop=1&playlist=nmbZjQ_mZ7c&controls=0&showinfo=0&modestbranding=1&rel=0&playsinline=1"
-    allow="autoplay; encrypted-media" allowfullscreen>
-  </iframe>
+  <!-- เปลี่ยนเป็นแท็ก video ของ HTML5 ล้วน -->
+  <video class="bg-video" autoplay loop muted playsinline>
+    <!-- เอา URL ของไฟล์ .mp4 มาใส่ที่นี่ (ตอนนี้ใส่ลิงก์ชั่วคราวให้เห็นภาพการทำงาน) -->
+    <source src="https://rr3---sn-5np5po4v-c33sk.googlevideo.com/videoplayback?expire=1790045187&ei=o5exarOCKtrTmLAPxa2D4Ak&ip=102.93.8.13&id=o-AGpOBO7JomNPaGSh4iP_mSNyOZe51mX67rHXybcTbiky&itag=315&source=youtube&requiressl=yes&xpc=EgVo2aDSNQ%3D%3D&cps=330&bui=AR3QkAnJmRuC3trktUEwujlPUT7izmmM0scP_8TGTBwys7p2LrqWzPPxF9vBmjXvSFScyDQNmPH3cM2A&spc=I-rgIdJ7MSdHqsgH0RH9QneNWEs62mcLzk2IYh0V7nH_rTmlf3IZmeifJywy&vprv=1&svpuc=1&mime=video%2Fwebm&rqh=1&gir=yes&clen=10463396810&dur=3599.966&lmt=1741271278396314&keepalive=yes&fexp=51565116,52112905&c=VISIONOS&txp=5432534&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cxpc%2Cbui%2Cspc%2Cvprv%2Csvpuc%2Cmime%2Crqh%2Cgir%2Cclen%2Cdur%2Clmt&sig=AE0s2JYwRQIhAPpjbk3X1AOl6iSs1RqkNHFahsU3nTnelBCOd7UO3matAiBbRd5DzQH0zksfoUSz_QtGczBm--VmSJN-LHlbems7SA%3D%3D&rm=sn-huoob-avnz7z,sn-h5q667e&rrc=79,104&req_id=3ffc050743e1a3ee&rms=rdu,au&redirect_counter=2&cms_redirect=yes&cmsv=e&ipbypass=yes&met=1790023597,&mh=KH&mip=58.8.189.237&mm=29&mn=sn-5np5po4v-c33sk&ms=rdu&mt=1790022738&mv=u&mvi=3&pl=24&lsparams=cps,ipbypass,met,mh,mip,mm,mn,ms,mv,mvi,pl,rms&lsig=APaTxxMwRQIhAOFk0ehUzyJl1C2nlnvwyPY0_ODOhtgj4mAuszoPADmFAiA8q8esQFIAmcMMmVZi53lAwsNOTKoOSuct5wAXFsXWUw%3D%3D" type="video/mp4">
+  </video>
 </div>
 <div class="tint-overlay"></div>
 <div class="stars"></div>
@@ -471,7 +469,7 @@
     setTimeout(() => {
       document.getElementById('intro-screen').classList.add('fade-out');
       document.getElementById('main-ui').classList.add('show');
-    }, 2800); // ดีเลย์เพิ่มขึ้นเล็กน้อยเพื่อให้ภาพ Intro แสดงผลได้นานขึ้น
+    }, 2800);
   });
 
   let isSyncing = false;

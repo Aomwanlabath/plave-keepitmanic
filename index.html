@@ -9,18 +9,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@500;600;700&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg-1:#150f24;
-    --bg-2:#211a38;
-    --gold:#c9a35a;
-    --gold-soft:#e4c98a;
-    --ivory:#f3ede0;
-    --muted:#a99bc4;
-    --c1:#241b3d;
-    --c2:#c9a35a;
-    --c3:#5c3a7a;
-    --c4:#2f5d62;
-    --c5:#7a3b46;
-    --c6:#3d4f7a;
+    --bg-1:#0a0a0c;
+    --bg-2:#1c1c1e;
+    --gold:#b81e24;
+    --gold-soft:#e5484d;
+    --ivory:#f5f5f5;
+    --muted:#9a9a9a;
+    --c1:#141414;
+    --c2:#c1272d;
+    --c3:#2b2b2b;
+    --c4:#7a1216;
+    --c5:#4a4a4a;
+    --c6:#e5e5e5;
   }
 
   *{box-sizing:border-box;}
@@ -62,8 +62,11 @@
     position:fixed;
     inset:0;
     z-index:0;
-    background:black;
-    opacity:50%;   /* ← ปรับตัวเลขนี้ค่าเดียว คุมความเข้มของสีทับวิดีโอทั้งหมด */
+    background:
+      radial-gradient(circle at 20% 15%, rgba(193,39,45,0.08), transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(0,0,0,0.6), transparent 45%),
+      linear-gradient(180deg, var(--bg-1), var(--bg-2));
+    opacity:.55;   /* ← ปรับตัวเลขนี้ค่าเดียว คุมความเข้มของสีทับวิดีโอทั้งหมด */
     pointer-events:none;
   }
 
@@ -139,11 +142,11 @@
     height:min(78vw, 380px);
     border-radius:50%;
     padding:10px;
-    background:linear-gradient(135deg, var(--gold-soft), #7a6636 60%, var(--gold));
+    background:linear-gradient(135deg, var(--gold-soft), #3a0d10 60%, var(--gold));
     box-shadow:
-      0 0 0 1px rgba(201,163,90,.3),
+      0 0 0 1px rgba(193,39,45,.3),
       0 30px 60px -20px rgba(0,0,0,.7),
-      0 0 60px rgba(201,163,90,.08);
+      0 0 60px rgba(193,39,45,.08);
   }
 
   .wheel{
@@ -159,7 +162,7 @@
       var(--c3) 240deg 270deg, var(--c4) 270deg 300deg,
       var(--c5) 300deg 330deg, var(--c6) 330deg 360deg
     );
-    box-shadow: inset 0 0 30px rgba(0,0,0,.5), inset 0 0 0 2px rgba(243,237,224,.06);
+    box-shadow: inset 0 0 30px rgba(0,0,0,.5), inset 0 0 0 2px rgba(245,245,245,.06);
     transition: transform 4.2s cubic-bezier(.16,.85,.2,1);
     will-change: transform;
   }
@@ -168,7 +171,7 @@
     position:absolute;
     top:0; left:50%;
     width:1px; height:50%;
-    background:rgba(243,237,224,.14);
+    background:rgba(245,245,245,.14);
     transform-origin: bottom center;
   }
 
@@ -182,7 +185,7 @@
     position:absolute;
     left:-9px; top:-9px;
     display:block;
-    color:rgba(243,237,224,.75);
+    color:rgba(245,245,245,.75);
     font-size:14px;
     text-shadow:0 1px 2px rgba(0,0,0,.5);
   }
@@ -193,7 +196,7 @@
     width:64px; height:64px;
     transform:translate(-50%,-50%);
     border-radius:50%;
-    background:radial-gradient(circle at 35% 30%, #2d2246, #150f24 75%);
+    background:radial-gradient(circle at 35% 30%, #2a2a2a, #0a0a0c 75%);
     border:2px solid var(--gold-soft);
     display:flex;
     align-items:center;
@@ -206,7 +209,7 @@
   .spin-btn{
     margin-top:34px;
     background:linear-gradient(135deg, var(--gold-soft), var(--gold));
-    color:#20162f;
+    color:#1a0505;
     border:none;
     font-family:'Noto Serif Thai', serif;
     font-weight:600;
@@ -214,10 +217,10 @@
     padding:14px 38px;
     border-radius:999px;
     cursor:pointer;
-    box-shadow:0 10px 24px -8px rgba(201,163,90,.5);
+    box-shadow:0 10px 24px -8px rgba(193,39,45,.5);
     transition:transform .15s ease, box-shadow .15s ease;
   }
-  .spin-btn:hover{ transform:translateY(-2px); box-shadow:0 14px 28px -8px rgba(201,163,90,.6); }
+  .spin-btn:hover{ transform:translateY(-2px); box-shadow:0 14px 28px -8px rgba(193,39,45,.6); }
   .spin-btn:active{ transform:translateY(0); }
   .spin-btn:disabled{ opacity:.55; cursor:not-allowed; transform:none; }
   .spin-btn:focus-visible{ outline:2px solid var(--gold-soft); outline-offset:3px; }
@@ -230,8 +233,8 @@
     margin-top:40px;
     padding:30px 28px;
     border-radius:20px;
-    background:rgba(243,237,224,.05);
-    border:1px solid rgba(201,163,90,.3);
+    background:rgba(245,245,245,.05);
+    border:1px solid rgba(193,39,45,.3);
     text-align:center;
     opacity:0;
     transform:translateY(14px) scale(.98);

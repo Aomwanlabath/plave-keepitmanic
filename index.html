@@ -9,10 +9,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@500;600;700&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg-1: #0a0a0c;
-    --bg-2: #1c0000;
+    --bg-1: #000000;
     --primary-red: #d31118;
     --dark-red: #520000;
+    --neon-red: #ff2a31;
     --ivory: #f5f7fa;
     --muted: #8b92a5;
   }
@@ -22,7 +22,7 @@
   body{
     margin:0;
     min-height:100vh;
-    background:transparent;
+    background:#000;
     color:var(--ivory);
     font-family:'Sarabun', sans-serif;
     display:flex;
@@ -48,10 +48,12 @@
     visibility: hidden;
   }
   #intro-screen h1 {
+    font-family:'Noto Serif Thai', serif;
     font-size: clamp(24px, 6vw, 42px);
     color: var(--ivory);
-    text-shadow: 0 0 15px rgba(211, 17, 24, 0.5);
+    text-shadow: 0 0 20px rgba(211, 17, 24, 0.8);
     text-align: center;
+    letter-spacing: 0.05em;
   }
 
   /* คอนเทนต์หลักซ่อนไว้ก่อนแล้วค่อยเฟดขึ้นมา */
@@ -63,6 +65,8 @@
     align-items: center;
     width: 100%;
     z-index: 1;
+    flex-grow: 1;
+    justify-content: center;
   }
   #main-ui.show {
     opacity: 1;
@@ -73,7 +77,6 @@
     inset:0;
     overflow:hidden;
     z-index:0;
-    opacity:.4;
     pointer-events:none;
   }
 
@@ -86,15 +89,17 @@
     min-height:100%;
     transform:translate(-50%,-50%);
     border:none;
+    opacity: 0.8;
   }
 
+  /* แก้ไขพื้นหลังฝ้าเทาด้วย Dark Vignette และ Multiply */
   .tint-overlay{
     position:fixed;
     inset:0;
     z-index:0;
-    /* เปลี่ยนกราเดี้ยน Overlay เป็น แดง-ดำ ตามรีเควส */
-    background: linear-gradient(135deg, rgba(211, 17, 24, 0.4) 0%, rgba(10, 10, 12, 0.9) 100%);
-    opacity:.8;
+    background: radial-gradient(circle at center, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.95) 100%);
+    background-color: rgba(10, 0, 0, 0.5); /* ดรอปแสงวิดีโอด้วยโทนดำอมแดงเข้มจัด */
+    mix-blend-mode: multiply;
     pointer-events:none;
   }
 
@@ -104,19 +109,18 @@
     pointer-events:none;
     z-index:0;
     background-image:
-      radial-gradient(1.5px 1.5px at 10% 20%, rgba(255,255,255,.5), transparent),
-      radial-gradient(1.5px 1.5px at 80% 10%, rgba(255,255,255,.4), transparent),
-      radial-gradient(1px 1px at 60% 70%, rgba(255,255,255,.35), transparent),
-      radial-gradient(1.5px 1.5px at 30% 85%, rgba(255,255,255,.4), transparent),
-      radial-gradient(1px 1px at 90% 60%, rgba(255,255,255,.3), transparent),
-      radial-gradient(1.5px 1.5px at 45% 40%, rgba(255,255,255,.35), transparent);
+      radial-gradient(1.5px 1.5px at 10% 20%, rgba(211,17,24,.3), transparent),
+      radial-gradient(1px 1px at 80% 10%, rgba(255,255,255,.2), transparent),
+      radial-gradient(1.5px 1.5px at 60% 70%, rgba(211,17,24,.4), transparent),
+      radial-gradient(1px 1px at 30% 85%, rgba(255,255,255,.2), transparent);
     background-size: 100% 100%;
+    opacity: 0.6;
   }
 
   header{
     text-align:center;
     max-width:520px;
-    margin-bottom:36px;
+    margin-bottom:48px;
     position:relative;
   }
 
@@ -143,110 +147,139 @@
     margin:0;
   }
 
-  .wheel-zone{
-    position:relative;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    margin-top:8px;
+  /* ดีไซน์ใหม่: Asterum Sync Node */
+  .sync-zone {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
-  .pointer{
-    width:0;
-    height:0;
-    border-left:14px solid transparent;
-    border-right:14px solid transparent;
-    border-top:24px solid var(--primary-red);
-    filter:drop-shadow(0 0 8px var(--primary-red));
-    margin-bottom:-6px;
-    z-index:3;
+  .sync-node {
+    position: relative;
+    width: 240px;
+    height: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
   }
 
-  .wheel-outer{
-    position:relative;
-    width:min(78vw, 380px);
-    height:min(78vw, 380px);
-    border-radius:50%;
-    padding:10px;
-    /* เปลี่ยนขอบวงล้อเป็นกราเดี้ยน แดง-ดำ */
-    background:linear-gradient(135deg, var(--primary-red), #000000 70%, var(--dark-red));
-    box-shadow:
-      0 0 0 2px rgba(211,17,24,.3),
-      0 30px 60px -20px rgba(0,0,0,.9),
-      0 0 40px rgba(211,17,24,.2);
+  .orbital-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(211, 17, 24, 0.3);
+    box-shadow: 0 0 15px rgba(211, 17, 24, 0.1) inset, 0 0 10px rgba(211, 17, 24, 0.2);
+    transition: all 0.3s ease;
+    pointer-events: none;
   }
 
-  .wheel{
-    position:relative;
-    width:100%;
-    height:100%;
-    border-radius:50%;
-    /* เปลี่ยนสีในวงล้อเป็น ขาว-เทา */
-    background:conic-gradient(
-      #ffffff 0deg 30deg,   #d9d9d9 30deg 60deg,
-      #ffffff 60deg 90deg,  #d9d9d9 90deg 120deg,
-      #ffffff 120deg 150deg, #d9d9d9 150deg 180deg,
-      #ffffff 180deg 210deg, #d9d9d9 210deg 240deg,
-      #ffffff 240deg 270deg, #d9d9d9 270deg 300deg,
-      #ffffff 300deg 330deg, #d9d9d9 330deg 360deg
-    );
-    box-shadow: inset 0 0 30px rgba(0,0,0,.5);
-    transition: transform 4.2s cubic-bezier(.16,.85,.2,1);
-    will-change: transform;
+  .ring-1 {
+    width: 100%;
+    height: 100%;
+    border-top-color: var(--primary-red);
+    border-bottom-color: var(--primary-red);
+    animation: spin-slow 8s linear infinite;
   }
 
-  .wheel .divider{
-    position:absolute;
-    top:0; left:50%;
-    width:1px; height:50%;
-    background:rgba(0,0,0,.15);
-    transform-origin: bottom center;
+  .ring-2 {
+    width: 75%;
+    height: 75%;
+    border-left-color: var(--neon-red);
+    border-right-color: var(--neon-red);
+    animation: spin-fast 5s linear infinite reverse;
   }
 
-  .hub{
-    position:absolute;
-    top:50%; left:50%;
-    width:64px; height:64px;
-    transform:translate(-50%,-50%);
-    border-radius:50%;
-    background:#000;
-    border:2px solid var(--primary-red);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    box-shadow:0 0 15px var(--primary-red);
-    z-index:2;
+  .ring-3 {
+    width: 55%;
+    height: 55%;
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    animation: spin-slow 12s linear infinite;
+  }
+
+  .node-core {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle, #1a0000 0%, #000000 100%);
+    border: 2px solid var(--primary-red);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 25px rgba(211, 17, 24, 0.5);
+    z-index: 2;
+    transition: all 0.2s ease;
+  }
+
+  .node-core img {
+    width: 60%;
+    height: auto;
+    filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));
+    transition: transform 0.3s ease;
+  }
+
+  /* Interaction & Animation states */
+  .sync-node:hover .node-core {
+    transform: scale(1.05);
+    box-shadow: 0 0 40px var(--neon-red);
+    background: radial-gradient(circle, #330000 0%, #000000 100%);
   }
   
-  .hub img {
-    width: 65%;
-    height: auto;
+  .sync-node:hover .ring-1, 
+  .sync-node:hover .ring-2 {
+    border-color: var(--neon-red);
+    box-shadow: 0 0 20px rgba(255, 42, 49, 0.4) inset, 0 0 15px rgba(255, 42, 49, 0.5);
   }
 
-  .spin-btn{
-    margin-top:34px;
-    background:linear-gradient(135deg, var(--primary-red), var(--dark-red));
-    color:#fff;
-    border:none;
-    font-family:'Noto Serif Thai', serif;
-    font-weight:600;
-    font-size:18px;
-    padding:14px 38px;
-    border-radius:999px;
-    cursor:pointer;
-    box-shadow:0 0 20px -5px var(--primary-red);
-    transition:transform .15s ease, box-shadow .15s ease;
+  .sync-node:active .node-core {
+    transform: scale(0.95);
   }
-  .spin-btn:hover{ transform:translateY(-2px); box-shadow:0 0 25px 0px var(--primary-red); }
-  .spin-btn:active{ transform:translateY(0); }
-  .spin-btn:disabled{ opacity:.55; cursor:not-allowed; transform:none; }
 
-  /* ปรับแก้ Result ให้เป็น Pop-up Modal */
+  /* สถานะกำลังประมวลผล (เมื่อกด) */
+  .sync-node.is-syncing .ring-1 { animation: spin-fast 0.8s linear infinite; border-color: var(--ivory); }
+  .sync-node.is-syncing .ring-2 { animation: spin-fast 0.5s linear infinite reverse; border-color: var(--ivory); }
+  .sync-node.is-syncing .node-core {
+    border-color: var(--ivory);
+    box-shadow: 0 0 50px rgba(255,255,255,0.8);
+    background: #fff;
+  }
+  .sync-node.is-syncing .node-core img {
+    filter: brightness(0) invert(1);
+    transform: scale(0.8);
+  }
+  .sync-node.is-syncing + .tap-hint {
+    opacity: 0;
+  }
+
+  /* ข้อความบอกใบ้ UX */
+  .tap-hint {
+    margin-top: 32px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--primary-red);
+    text-transform: uppercase;
+    animation: pulse 2s ease-in-out infinite;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+
+  @keyframes spin-slow { 100% { transform: rotate(360deg); } }
+  @keyframes spin-fast { 100% { transform: rotate(360deg); } }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; text-shadow: 0 0 10px var(--primary-red); }
+  }
+
+  /* Modal Pop-up */
   .modal-backdrop {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(4px);
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     z-index: 49;
     opacity: 0;
     pointer-events: none;
@@ -263,11 +296,11 @@
     z-index:50;
     width: 90%;
     max-width: 420px;
-    padding:30px 24px;
-    border-radius:20px;
-    background: linear-gradient(180deg, #1a0505 0%, #0a0a0c 100%);
-    border:1px solid var(--primary-red);
-    box-shadow: 0 10px 40px rgba(211,17,24,0.3);
+    padding:32px 24px;
+    border-radius:16px;
+    background: linear-gradient(180deg, #150000 0%, #050000 100%);
+    border:1px solid var(--dark-red);
+    box-shadow: 0 10px 50px rgba(211,17,24,0.2), inset 0 0 20px rgba(211,17,24,0.1);
     text-align:center;
     opacity:0;
     transform:translate(-50%, -40%) scale(.95);
@@ -284,36 +317,40 @@
     font-size:14px;
     font-weight:600;
     letter-spacing:.05em;
-    margin-bottom:16px;
+    margin-bottom:20px;
+    text-transform: uppercase;
   }
   
   .result p{
     font-family:'Sarabun', sans-serif;
     font-size:clamp(15px, 3.5vw, 17px);
     font-weight: 300;
-    line-height:1.6;
-    margin:0 0 24px;
+    line-height:1.7;
+    margin:0 0 32px;
     color: var(--ivory);
     text-align: left;
   }
 
   .close-btn {
     background: transparent;
-    color: var(--ivory);
-    border: 1px solid var(--muted);
-    padding: 8px 24px;
+    color: var(--muted);
+    border: 1px solid var(--dark-red);
+    padding: 10px 32px;
     border-radius: 99px;
     font-family: 'Sarabun', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
     cursor: pointer;
     transition: all 0.2s ease;
   }
   .close-btn:hover {
-    background: rgba(255,255,255,0.1);
-    border-color: var(--ivory);
+    background: rgba(211,17,24,0.1);
+    color: var(--ivory);
+    border-color: var(--primary-red);
   }
 
   footer{
-    margin-top:56px;
+    margin-top:auto;
     color:var(--muted);
     font-size:13px;
     text-align:center;
@@ -346,16 +383,17 @@
     <p>สแกนความถี่จาก Asterum เพื่อรับข้อความที่จักรวาลอยากบอกคุณในวันนี้</p>
   </header>
 
-  <div class="wheel-zone">
-    <div class="pointer"></div>
-    <div class="wheel-outer">
-      <div class="wheel" id="wheel">
-        <div class="hub">
-          <img src="https://vlast.com/wp-content/uploads/2023/12/plave_logo_wh.svg" alt="PLAVE Logo">
-        </div>
+  <div class="sync-zone">
+    <!-- UI แบบใหม่ แกนเชื่อมต่อความถี่ -->
+    <div class="sync-node" id="syncNode">
+      <div class="orbital-ring ring-1"></div>
+      <div class="orbital-ring ring-2"></div>
+      <div class="orbital-ring ring-3"></div>
+      <div class="node-core">
+        <img src="https://vlast.com/wp-content/uploads/2023/12/plave_logo_wh.svg" alt="PLAVE Logo">
       </div>
     </div>
-    <button class="spin-btn" id="spinBtn">เชื่อมต่อคลื่นความถี่ (Spin)</button>
+    <div class="tap-hint">Tap to Sync</div>
   </div>
 
   <footer>PLLI GIVEAWAY 🌟</footer>
@@ -365,11 +403,11 @@
 <div class="result" id="result">
   <div class="label">ข้อความจากจักรวาล</div>
   <p id="resultText">—</p>
-  <button class="close-btn" id="closeBtn">ปิด</button>
+  <button class="close-btn" id="closeBtn">ปิดการเชื่อมต่อ</button>
 </div>
 
 <script>
-  // ชุดข้อมูลข้อความทำนายดั้งเดิมของคุณ
+  // ชุดข้อมูลข้อความทำนาย
   const fortunes = [
     "อย่ายอมให้ใครมองข้ามคุณเด็ดขาด ถ้ารู้สึกว่าถูกปฏิบัติไม่ดี ก็ถอยออกจากสถานการณ์นั้นดีกว่า คุณมีคุณค่ากว่านั้นมาก",
     "เราสังเกตเห็นว่าคุณใกล้จะประสบความสำเร็จในสิ่งที่คุณรอคอยมานาน สถานการณ์กำลังจะถึงจุดที่สมบูรณ์แบบแล้ว และคุณก็ได้เรียนรู้บทเรียนที่สำคัญแล้ว นี่คือช่วงเวลาที่คุณจะได้ประโยชน์ เชื่อเถอะว่าเรากำลังทำงานเบื้องหลังเพื่อให้ผลลัพธ์ที่ดีที่สุดสำหรับคุณ",
@@ -427,63 +465,42 @@
     "ไม่ว่าตอนนี้คุณจะถูกทดสอบหรือถูกกดดันมากแค่ไหน จงยืนหยัดและสู้กลับไป เชื่อในตัวของคุณเองและคุณค่าของตัวเองให้มากพอที่จะไม่ไม่ปล่อยให้ใครมาทำให้คุณไขว้เขวได้ มีความมั่นใจที่จะก้าวไปข้างหน้า คุณทำได้และจะทำได้สำเร็จ"
   ];
 
-  const wheel = document.getElementById('wheel');
-  const spinBtn = document.getElementById('spinBtn');
+  const syncNode = document.getElementById('syncNode');
   const result = document.getElementById('result');
   const resultText = document.getElementById('resultText');
   const modalBackdrop = document.getElementById('modalBackdrop');
   const closeBtn = document.getElementById('closeBtn');
-
-  // วาดเส้นแบ่งช่องวงล้อ (ไม่มีไอคอน)
-  for (let i = 0; i < 12; i++) {
-    const div = document.createElement('div');
-    div.className = 'divider';
-    div.style.transform = `rotate(${i * 30}deg)`;
-    wheel.appendChild(div);
-  }
 
   // อนิเมชัน Intro หน้าแรก
   window.addEventListener('load', () => {
     setTimeout(() => {
       document.getElementById('intro-screen').classList.add('fade-out');
       document.getElementById('main-ui').classList.add('show');
-    }, 2200); // ดีเลย์ 2.2 วินาทีก่อนเฟดออก
+    }, 2200);
   });
 
-  let currentRotation = 0;
-  let spinning = false;
+  let isSyncing = false;
 
-  function spin() {
-    if (spinning) return;
-    spinning = true;
-    spinBtn.disabled = true;
+  function triggerSync() {
+    if (isSyncing) return;
+    isSyncing = true;
+    
+    // ใส่คลาสเปลี่ยนสถานะแกนกลางให้หมุนเร็วและสว่างขึ้น
+    syncNode.classList.add('is-syncing');
 
     // สุ่มผลลัพธ์
     const textIdx = Math.floor(Math.random() * fortunes.length);
     
-    // สุ่มช่องบนหน้าปัดวงล้อ (0 ถึง 11) เพื่อให้หมุนสุ่ม
-    const targetSegment = Math.floor(Math.random() * 12);
-    
-    // คำนวณองศาหมุน
-    const landAngle = 360 - (targetSegment * 30 + 15);
-    const currentMod = currentRotation % 360;
-    let offsetToTarget = landAngle - currentMod;
-    if (offsetToTarget < 0) offsetToTarget += 360;
-    
-    const extraTurns = 5 + Math.floor(Math.random() * 3);
-    currentRotation += (extraTurns * 360) + offsetToTarget;
-    wheel.style.transform = `rotate(${currentRotation}deg)`;
-
-    const onEnd = () => {
-      wheel.removeEventListener('transitionend', onEnd);
+    // หน่วงเวลาจำลองการแสกนหาคลื่นความถี่ (2 วินาที)
+    setTimeout(() => {
+      syncNode.classList.remove('is-syncing');
       resultText.textContent = fortunes[textIdx];
+      
       // แสดง Modal Pop-up
       modalBackdrop.classList.add('show');
       result.classList.add('show');
-      spinning = false;
-      spinBtn.disabled = false;
-    };
-    wheel.addEventListener('transitionend', onEnd);
+      isSyncing = false;
+    }, 2000);
   }
 
   function closeModal() {
@@ -491,7 +508,7 @@
     result.classList.remove('show');
   }
 
-  spinBtn.addEventListener('click', spin);
+  syncNode.addEventListener('click', triggerSync);
   closeBtn.addEventListener('click', closeModal);
   modalBackdrop.addEventListener('click', closeModal);
 </script>
